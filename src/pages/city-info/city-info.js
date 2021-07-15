@@ -57,7 +57,7 @@ const CityInfo = () => {
                             </WeatherItem>
                         </TemperatureContainer>
                     </WeatherContainer>
-                    <ButtonsContainer>
+                    <ButtonContainer>
                         <Button
                             color="secondary"
                             size="large"
@@ -66,7 +66,7 @@ const CityInfo = () => {
                         >
                             {"<"} go back to the map
                         </Button>
-                    </ButtonsContainer>
+                    </ButtonContainer>
                 </CityContainer>
             </Content>
         </>
@@ -74,32 +74,42 @@ const CityInfo = () => {
 };
 
 /** Components styled by styled component to clean code */
+
+/** create a city grid container */
 const CityContainer = styled(Grid).attrs({
     container: true,
     direction: "column",
 })``;
 
+/** create a weather grid container */
 const WeatherContainer = styled(Grid).attrs({ container: true, item: true })``;
 
+/** create a temperature grid container */
 const TemperatureContainer = styled(Grid).attrs({
     direction: "column",
     container: true,
     item: true,
-    xs: 6,
-    sm: 10,
-    lg: 11,
-})``;
+    xs: 5,
+    sm: 9,
+    lg: 10,
+})`
+    margin-left: ${({ theme }) => theme.spacing(2)}px;
+`;
 
+/** create a weather grid item */
 const WeatherItem = styled(Grid).attrs({ item: true })``;
 
-const ButtonsContainer = styled(Grid).attrs({ item: true })`
+/** create a button container */
+const ButtonContainer = styled(Grid).attrs({ item: true })`
     margin-top: ${({ theme }) => theme.spacing(2)}px;
     align-items: center;
     display: flex;
 `;
 
+/** create a container to weather logo */
 const LogoContainer = styled(Grid).attrs({ item: true, xs: 6, sm: 2, lg: 1 })``;
 
+/** create a img component to weather logo */
 const LogoWeather = styled.img.attrs({
     alt: "weatherStatus",
 })`

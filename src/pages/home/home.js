@@ -24,8 +24,11 @@ const Home = () => {
     function mapClicked(mapProps, map, e) {
         const lat = e.latLng.lat();
         const lng = e.latLng.lng();
-        setMarker({ lat, lng });
-        setButtonStatus(false);
+
+        if (!fetchingCities) {
+            setMarker({ lat, lng });
+            setButtonStatus(false);
+        }
     }
 
     /** function to delete marker when his is clicked */
@@ -98,29 +101,31 @@ const Home = () => {
                         Unfortunately we cannot load cities in this region :(
                     </H4>
                 )}
-                <ContainerCities>
+                <CitiesContainer>
                     <Grid item>{fetchingCities && <LinearProgress />}</Grid>
-                    <ContainerCities>
+                    <CitiesContainer>
                         {useCities?.map((city, i) => {
                             return (
-                                <Grid key={city.id} item md={4} xs={6}>
-                                    <Link
+                                <CityItem key={city.id}>
+                                    <CityLink
                                         to={{
                                             pathname: CITY_INFO,
                                             state: { city },
                                         }}
                                     >
                                         {city.name}
-                                    </Link>
-                                </Grid>
+                                    </CityLink>
+                                </CityItem>
                             );
                         })}
-                    </ContainerCities>
-                </ContainerCities>
+                    </CitiesContainer>
+                </CitiesContainer>
             </Content>
         </>
     );
 };
+
+/** Components styled by styled component to clean code */
 
 /** set map container in home */
 const MapContainer = styled.div`
@@ -144,9 +149,30 @@ const ButtonSearch = styled(Button).attrs({
     color: "primary",
     variant: "contained",
 })`
+    font-size: 16px;
     text-align: center;
 `;
 
-const ContainerCities = styled(Grid).attrs({ container: true })``;
+const CityItem = styled(Grid).attrs({ item: true, md: 4, xs: 6 })`
+    margin: ${({ theme }) => theme.spacing(0.5, 0)};
+`;
+
+/** create a custom link to cities and remove hyperlink decorations*/
+const CityLink = styled(Link)`
+    font-size: 16px;
+
+    text-decoration: none;
+
+    &:focus,
+    &:hover,
+    &:visited,
+    &:link,
+    &:active {
+        text-decoration: none;
+    }
+`;
+
+/** create a Grid container to cities */
+const CitiesContainer = styled(Grid).attrs({ container: true })``;
 
 export default Home;
