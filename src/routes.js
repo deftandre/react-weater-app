@@ -1,2 +1,2 @@
 export const HOME = "/";
-export const CITY_INFO = "/cities";
+export const CITY_INFO = "/city-info";

@@ -5,6 +5,7 @@ import { createGlobalStyle, ThemeProvider } from "styled-components";
 import { createTheme, CssBaseline, MuiThemeProvider } from "@material-ui/core";
 import App from "./app";
 
+/** custom properties in material ui theme to using in style */
 const theme = createTheme({
     typography: {
         useNextVariants: true,
@@ -15,7 +16,7 @@ const theme = createTheme({
             black: "#212121",
         },
         secondary: {
-            main: "#ff5722",
+            main: "#ff1744",
         },
     },
 });
@@ -32,6 +33,7 @@ const Root = () => (
     </MuiThemeProvider>
 );
 
+/** custom custom globalstyle configs in all app */
 const GlobalStyle = createGlobalStyle`
     #root{
         display: flex;

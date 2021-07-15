@@ -4,6 +4,7 @@ import { LinearProgress } from "@material-ui/core";
 
 import { HOME } from "routes";
 
+/** dinamic import in app component using lazy and suspense */
 const MainPage = lazy(() => import("pages/main"));
 
 function App() {

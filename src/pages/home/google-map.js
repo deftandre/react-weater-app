@@ -1,6 +1,8 @@
 import React from "react";
+/** Components import, map to map, googleApiWrapper to able map and marker with custom location to get lat and lng */
 import { Map, GoogleApiWrapper, Marker } from "google-maps-react";
 
+/** Set Map size and hidden overflow */
 const mapStyles = {
     maxWidth: "1232px",
     height: "540px",
@@ -8,6 +10,7 @@ const mapStyles = {
     overflowY: "hidden",
 };
 
+/** Set container map size */
 const containerStyle = {
     maxWidth: "1232px",
     height: "540px",
@@ -34,6 +37,7 @@ export const GoogleMap = (props) => {
     );
 };
 
+/** Create a component getting a google api key and validate */
 export default GoogleApiWrapper({
     apiKey: process.env.REACT_APP_API_KEY_GOOGLEMAPS,
 })(GoogleMap);

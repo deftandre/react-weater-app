@@ -2,4 +2,9 @@ import React from "react";
 import ReactDOM from "react-dom";
 import Root from "./root";
 
-ReactDOM.render(<Root />, document.getElementById("root"));
+import ErrorBoundary from "error";
+
+ReactDOM.render(
+    <ErrorBoundary>{(hasError) => <Root />}</ErrorBoundary>,
+    document.getElementById("root")
+);
