@@ -4,6 +4,21 @@ A weather app with google maps, you can mark map where you want to see the weath
 
 Available in https://deftweatherapp.netlify.app/
 
+## Techinical choices
+
+I like to work with this stack: ReactJs with Material UI and Styled Components.
+
+Material UI has amazing components and the documentation is so good with styled components I can styled components in code, I think it's so good in development time and the ReactJs component code stay clean.
+Another advantage about Material UI is the Mobile first methodology, you can build web apps for almost all devices.
+
+I used the React Router DOM library for navigation using components like (Link, Redirect, Route, Switch, useLocation) to build this SPA.
+
+For the best user experience when loading pages I used imports dynamics from ReactJs.
+
+For data manipulation I used hooks useState and useEffect, between the Home page to city-info page I only send the data in state location and get in city-info with hook useLocation.
+
+For GoogleMaps I used google-maps-react because I compare with others dependencies, then, I think google-maps-react is more simple than others and I liked more his documentation.
+
 ## Default settings for environment variables
 
 Create a '.env.local' file at the root of your application, with the following variables:
