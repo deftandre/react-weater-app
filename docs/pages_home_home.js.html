@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: pages/home/home.js</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Source: pages/home/home.js</h1>
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>import React, { useState } from "react";
+import { Link } from "react-router-dom";
+import styled from "styled-components";
+import { Button, Grid, LinearProgress } from "@material-ui/core";
+
+import { Content, H4 } from "ui";
+import GoogleMap from "./google-map";
+
+import { CITY_INFO } from "routes";
+
+const Home = () => {
+    /** custom state to Marker position */
+    const [useMarker, setMarker] = useState({});
+    /** custom state to verify if fetching is in progress */
+    const [fetchingCities, setFetchingCities] = useState(false);
+    /** custom state to disabled button when marker is not in map */
+    const [useButtonStatus, setButtonStatus] = useState(true);
+    /** custom state to get cities info */
+    const [useCities, setCities] = useState([]);
+    /** custom state to handle errors */
+    const [useError, setError] = useState(false);
+
+    /** function to get map events and set marker position */
+    function mapClicked(mapProps, map, e) {
+        const lat = e.latLng.lat();
+        const lng = e.latLng.lng();
+
+        if (!fetchingCities) {
+            setMarker({ lat, lng });
+            setButtonStatus(false);
+        }
+    }
+
+    /** function to delete marker when his is clicked */
+    function markerClicked() {
+        setMarker({});
+        setButtonStatus(true);
+    }
+
+    /** async function to get cities information */
+    async function fetchCities() {
+        const lat = useMarker.lat;
+        const lng = useMarker.lng;
+
+        /** set url with api key api */
+        const url = `http://api.openweathermap.org/data/2.5/find?lat=${lat}&amp;lon=${lng}&amp;units=metric&amp;cnt=15&amp;APPID=`;
+        const apiKey = process.env.REACT_APP_API_OPEN_WEATHER;
+
+        const fullUrl = url + apiKey;
+
+        /** get data */
+        setError(false);
+        setFetchingCities(true);
+        setButtonStatus(true);
+        const data = await fetch(fullUrl);
+        setFetchingCities(false);
+        setButtonStatus(false);
+
+        /** verify if data is valid and set error with is not valid */
+        if (!data.ok) {
+            setCities([]);
+            setError(true);
+            return;
+        }
+
+        /** get data in json object */
+        const result = await data.json();
+
+        /** the api was returned repeated cities, I need to filter this by name, because the id is different, but the name and city is the same */
+        let uniq = {};
+        const citiesFiltered = result?.list.filter(
+            (city) => !uniq[city.name] &amp;&amp; (uniq[city.name] = true)
+        );
+
+        /** set values in useCities */
+        setCities(citiesFiltered);
+    }
+
+    return (
+        &lt;>
+            {/** content to standard container */}
+            &lt;Content>
+                &lt;MapContainer>
+                    &lt;GoogleMap
+                        mapClicked={mapClicked}
+                        markerClicked={markerClicked}
+                        lat={useMarker.lat}
+                        lng={useMarker.lng}
+                    />
+                &lt;/MapContainer>
+                &lt;ButtonsContainer>
+                    &lt;ButtonSearch
+                        disabled={useButtonStatus}
+                        onClick={fetchCities}
+                    >
+                        Search
+                    &lt;/ButtonSearch>
+                &lt;/ButtonsContainer>
+                {useError &amp;&amp; (
+                    &lt;H4 color="secondary">
+                        Unfortunately we cannot load cities in this region :(
+                    &lt;/H4>
+                )}
+                &lt;CitiesContainer>
+                    &lt;Grid item>{fetchingCities &amp;&amp; &lt;LinearProgress />}&lt;/Grid>
+                    &lt;CitiesContainer>
+                        {useCities?.map((city, i) => {
+                            return (
+                                &lt;CityItem key={city.id}>
+                                    &lt;CityLink
+                                        to={{
+                                            pathname: CITY_INFO,
+                                            state: { city },
+                                        }}
+                                    >
+                                        {city.name}
+                                    &lt;/CityLink>
+                                &lt;/CityItem>
+                            );
+                        })}
+                    &lt;/CitiesContainer>
+                &lt;/CitiesContainer>
+            &lt;/Content>
+        &lt;/>
+    );
+};
+
+/** Components styled by styled component to clean code */
+
+/** set map container in home */
+const MapContainer = styled.div`
+    max-width: "1232px";
+    height: 540px;
+    margin-bottom: ${({ theme }) => theme.spacing(2)}px;
+`;
+
+/** set buttonContainer */
+const ButtonsContainer = styled(Grid).attrs({ container: true, spacing: 2 })`
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    margin-bottom: ${({ theme }) => theme.spacing(2)}px;
+    text-align: center;
+    padding: ${({ theme }) => theme.spacing(1)}px;
+`;
+
+/** create button by Button material-ui */
+const ButtonSearch = styled(Button).attrs({
+    color: "primary",
+    variant: "contained",
+})`
+    font-size: 16px;
+    text-align: center;
+`;
+
+const CityItem = styled(Grid).attrs({ item: true, md: 4, xs: 6 })`
+    margin: ${({ theme }) => theme.spacing(0.5, 0)};
+`;
+
+/** create a custom link to cities and remove hyperlink decorations*/
+const CityLink = styled(Link)`
+    font-size: 16px;
+
+    text-decoration: none;
+
+    &amp;:focus,
+    &amp;:hover,
+    &amp;:visited,
+    &amp;:link,
+    &amp;:active {
+        text-decoration: none;
+    }
+`;
+
+/** create a Grid container to cities */
+const CitiesContainer = styled(Grid).attrs({ container: true })``;
+
+export default Home;
+</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="ErrorBoundary.html">ErrorBoundary</a></li></ul><h3>Global</h3><ul><li><a href="global.html#ButtonContainer">ButtonContainer</a></li><li><a href="global.html#ButtonsContainer">ButtonsContainer</a></li><li><a href="global.html#ButtonSearch">ButtonSearch</a></li><li><a href="global.html#CitiesContainer">CitiesContainer</a></li><li><a href="global.html#CityContainer">CityContainer</a></li><li><a href="global.html#CityInfo">CityInfo</a></li><li><a href="global.html#CityLink">CityLink</a></li><li><a href="global.html#containerStyle">containerStyle</a></li><li><a href="global.html#Content">Content</a></li><li><a href="global.html#GlobalStyle">GlobalStyle</a></li><li><a href="global.html#H3Config">H3Config</a></li><li><a href="global.html#H4Config">H4Config</a></li><li><a href="global.html#Header">Header</a></li><li><a href="global.html#HeaderCommon">HeaderCommon</a></li><li><a href="global.html#Home">Home</a></li><li><a href="global.html#LinkLogo">LinkLogo</a></li><li><a href="global.html#Logo">Logo</a></li><li><a href="global.html#LogoContainer">LogoContainer</a></li><li><a href="global.html#LogoWeather">LogoWeather</a></li><li><a href="global.html#MainPage">MainPage</a></li><li><a href="global.html#MapContainer">MapContainer</a></li><li><a href="global.html#mapStyles">mapStyles</a></li><li><a href="global.html#Spacer">Spacer</a></li><li><a href="global.html#style">style</a></li><li><a href="global.html#TemperatureContainer">TemperatureContainer</a></li><li><a href="global.html#theme">theme</a></li><li><a href="global.html#Title">Title</a></li><li><a href="global.html#Toolbar">Toolbar</a></li><li><a href="global.html#useScrollToTop">useScrollToTop</a></li><li><a href="global.html#WeatherContainer">WeatherContainer</a></li><li><a href="global.html#WeatherItem">WeatherItem</a></li></ul>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 3.6.7</a> on Thu Jul 15 2021 03:12:07 GMT-0300 (Horário Padrão de Brasília)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>

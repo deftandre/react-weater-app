@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: pages/city-info/city-info.js</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Source: pages/city-info/city-info.js</h1>
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>import React from "react";
+import { Link, Redirect, useLocation } from "react-router-dom";
+import { Button, Grid } from "@material-ui/core";
+import { ArrowDownward, ArrowUpward } from "@material-ui/icons";
+import styled from "styled-components";
+
+import { Content, H3, H4 } from "ui";
+import { HOME } from "routes";
+
+/** function component to render cities weather info */
+const CityInfo = () => {
+    /** get last page state sent by Link with hook useLocation() */
+    const { state } = useLocation();
+
+    /** verify if state is valid, if not valid redirect to Home*/
+    if (!state) {
+        return &lt;Redirect to={HOME} />;
+    }
+
+    /** get city in state */
+    const { city } = state;
+
+    /** get temperatures in city main infos */
+    const { temp_min, temp_max } = city.main;
+
+    /** get icon name in openweather api */
+    const { icon } = city.weather[0];
+
+    return (
+        &lt;>
+            {/** content to standard container */}
+            &lt;Content>
+                &lt;CityContainer>
+                    &lt;WeatherItem>
+                        &lt;H3>{city.name}&lt;/H3>
+                    &lt;/WeatherItem>
+                    &lt;WeatherContainer>
+                        &lt;LogoContainer>
+                            &lt;LogoWeather
+                                src={`http://openweathermap.org/img/wn/${icon}@2x.png`}
+                            />
+                        &lt;/LogoContainer>
+                        &lt;TemperatureContainer>
+                            &lt;WeatherItem>
+                                &lt;H4>
+                                    &lt;ArrowDownward color="secondary" />
+                                    {Math.trunc(temp_min)}
+                                    {"º"}
+                                &lt;/H4>
+                            &lt;/WeatherItem>
+                            &lt;WeatherItem>
+                                &lt;H4>
+                                    &lt;ArrowUpward color="primary" />
+                                    {Math.trunc(temp_max)}
+                                    {"º"}
+                                &lt;/H4>
+                            &lt;/WeatherItem>
+                        &lt;/TemperatureContainer>
+                    &lt;/WeatherContainer>
+                    &lt;ButtonContainer>
+                        &lt;Button
+                            color="secondary"
+                            size="large"
+                            component={Link}
+                            to={HOME}
+                        >
+                            {"&lt;"} go back to the map
+                        &lt;/Button>
+                    &lt;/ButtonContainer>
+                &lt;/CityContainer>
+            &lt;/Content>
+        &lt;/>
+    );
+};
+
+/** Components styled by styled component to clean code */
+
+/** create a city grid container */
+const CityContainer = styled(Grid).attrs({
+    container: true,
+    direction: "column",
+})``;
+
+/** create a weather grid container */
+const WeatherContainer = styled(Grid).attrs({ container: true, item: true })``;
+
+/** create a temperature grid container */
+const TemperatureContainer = styled(Grid).attrs({
+    direction: "column",
+    container: true,
+    item: true,
+    xs: 5,
+    sm: 9,
+    lg: 10,
+})`
+    margin-left: ${({ theme }) => theme.spacing(2)}px;
+`;
+
+/** create a weather grid item */
+const WeatherItem = styled(Grid).attrs({ item: true })``;
+
+/** create a button container */
+const ButtonContainer = styled(Grid).attrs({ item: true })`
+    margin-top: ${({ theme }) => theme.spacing(2)}px;
+    align-items: center;
+    display: flex;
+`;
+
+/** create a container to weather logo */
+const LogoContainer = styled(Grid).attrs({ item: true, xs: 6, sm: 2, lg: 1 })``;
+
+/** create a img component to weather logo */
+const LogoWeather = styled.img.attrs({
+    alt: "weatherStatus",
+})`
+    background-color: #a0a0a0;
+`;
+
+export default CityInfo;
+</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="ErrorBoundary.html">ErrorBoundary</a></li></ul><h3>Global</h3><ul><li><a href="global.html#ButtonContainer">ButtonContainer</a></li><li><a href="global.html#ButtonsContainer">ButtonsContainer</a></li><li><a href="global.html#ButtonSearch">ButtonSearch</a></li><li><a href="global.html#CitiesContainer">CitiesContainer</a></li><li><a href="global.html#CityContainer">CityContainer</a></li><li><a href="global.html#CityInfo">CityInfo</a></li><li><a href="global.html#CityLink">CityLink</a></li><li><a href="global.html#containerStyle">containerStyle</a></li><li><a href="global.html#Content">Content</a></li><li><a href="global.html#GlobalStyle">GlobalStyle</a></li><li><a href="global.html#H3Config">H3Config</a></li><li><a href="global.html#H4Config">H4Config</a></li><li><a href="global.html#Header">Header</a></li><li><a href="global.html#HeaderCommon">HeaderCommon</a></li><li><a href="global.html#Home">Home</a></li><li><a href="global.html#LinkLogo">LinkLogo</a></li><li><a href="global.html#Logo">Logo</a></li><li><a href="global.html#LogoContainer">LogoContainer</a></li><li><a href="global.html#LogoWeather">LogoWeather</a></li><li><a href="global.html#MainPage">MainPage</a></li><li><a href="global.html#MapContainer">MapContainer</a></li><li><a href="global.html#mapStyles">mapStyles</a></li><li><a href="global.html#Spacer">Spacer</a></li><li><a href="global.html#style">style</a></li><li><a href="global.html#TemperatureContainer">TemperatureContainer</a></li><li><a href="global.html#theme">theme</a></li><li><a href="global.html#Title">Title</a></li><li><a href="global.html#Toolbar">Toolbar</a></li><li><a href="global.html#useScrollToTop">useScrollToTop</a></li><li><a href="global.html#WeatherContainer">WeatherContainer</a></li><li><a href="global.html#WeatherItem">WeatherItem</a></li></ul>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 3.6.7</a> on Thu Jul 15 2021 03:12:07 GMT-0300 (Horário Padrão de Brasília)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>
